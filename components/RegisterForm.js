@@ -21,7 +21,7 @@ function RegisterForm({ user, updateUser }) {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Customer Info</Form.Label>
+        <Form.Label>Engineer Info</Form.Label>
         <div>___________________</div>
         {/* FIRST NAME  */}
         <Form.Text className="text-muted">First Name</Form.Text>

@@ -21,7 +21,7 @@ const getAllSessions = () => new Promise((resolve, reject) => {
 });
 
 const getSessionsByUserId = (id) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials}/sessions?engineer_id=${id}`, {
+  fetch(`${endpoint}/sessions?engineer_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const getSingleSession = (sessionId) => new Promise((resolve, reject) => {
 });
 
 const createSession = (session) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials}/sessions`, {
+  fetch(`${endpoint}/sessions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const createSession = (session) => new Promise((resolve, reject) => {
 });
 
 const updateSession = (session) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials}/sessions/${session.id}`, {
+  fetch(`${endpoint}/sessions/${session.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const updateSession = (session) => new Promise((resolve, reject) => {
 });
 
 const deleteSession = (id) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials}/sessions/${id}`, {
+  fetch(`${endpoint}/sessions/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
