@@ -19,6 +19,9 @@ const SessionCard = ({ sessionObj, onUpdate }) => {
         <Card.Text>
           Date: {sessionObj.date}
         </Card.Text>
+        <Link href={`/sessions/${sessionObj.id}`} passHref>
+          <Button variant="light" className="btn btn-outline-dark">View Session Details</Button>
+        </Link>
         <Link href={`/sessions/edit/${sessionObj.id}`} passHref>
           <Button variant="light" className="btn btn-outline-dark">Edit Session</Button>
         </Link>
