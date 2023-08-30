@@ -124,7 +124,7 @@ SessionForm.propTypes = {
     start_time: PropTypes.string,
     end_time: PropTypes.string,
     engineer_id: PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.number,
       first_name: PropTypes.string,
       last_name: PropTypes.string,
     }),
