@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
+import { useAuth } from '../../utils/context/authContext';
 import { createSession, updateSession } from '../../utils/data/sessionData';
 import { getAllEngineers } from '../../utils/data/engineerData';
+import createSessionEngineer from '../../utils/data/sessionEngineerData';
 
 const initialState = {
   artist: '',
@@ -16,6 +18,8 @@ const initialState = {
 export default function SessionForm({ sessionObj }) {
   const [currentSession, setCurrentSession] = useState(initialState);
   const [engineers, setEngineers] = useState([]);
+  const [selectedEngineers, setSelectedEngineers] = useState([]);
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -40,6 +44,20 @@ export default function SessionForm({ sessionObj }) {
     }));
   };
 
+  const handleCheckboxChange = (engineerId) => {
+    if (selectedEngineers.includes(engineerId)) {
+      // if the engineer is already included in the array,
+      // we create a new array using .filter that includes every engineer
+      // except for the engineer who was deselected
+      setSelectedEngineers(selectedEngineers.filter((id) => id !== engineerId));
+    } else {
+      // if the engineer is not already included in the array,
+      // we use the spread operator to include the selected engineers
+      // and we add the newly selected engineer to the array
+      setSelectedEngineers([...selectedEngineers, engineerId]);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (sessionObj.id) {
@@ -58,9 +76,18 @@ export default function SessionForm({ sessionObj }) {
         date: currentSession.date,
         startTime: currentSession.startTime,
         endTime: currentSession.endTime,
-        engineerId: Number(currentSession.engineerId),
+        engineerId: Number(user.id),
       };
-      createSession(session).then(() => router.push('/'));
+      createSession(session);
+      selectedEngineers.forEach((engineer) => {
+        const payload = {
+          engineerId: engineer.id,
+          sessionId: session.id,
+        };
+        createSessionEngineer(payload);
+        console.warn(selectedEngineers);
+      });
+      router.push('/');
     }
   };
 
@@ -86,26 +113,22 @@ export default function SessionForm({ sessionObj }) {
         <Form.Control name="endTime" required value={currentSession.endTime} onChange={handleChange} type="text" />
       </Form.Group>
 
-      <Form.Group className="floatingSelect">
-        <Form.Label>Engineer</Form.Label>
-        <Form.Select
-          name="engineerId"
-          onChange={handleChange}
-          className="mb-3"
-          value={currentSession.engineerId}
-          required
-        >
-          <option value="">Select an Engineer</option>
-          {engineers.map((engineer) => (
-            <option
-              key={engineer.id}
-              value={engineer.id}
-            >
-              {engineer.first_name} {engineer.last_name}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
+      <Form.Label>Select Engineers:</Form.Label>
+      {engineers.map((engineer) => (
+        <div className="form-check" key={engineer.id}>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            value={engineer.id}
+            id={`engineer-${engineer.id}`}
+            checked={selectedEngineers.includes(engineer.id)}
+            onChange={() => handleCheckboxChange(engineer.id)}
+          />
+          <label className="form-check-label" htmlFor={`engineer-${engineer.id}`}>
+            {engineer.first_name} {engineer.last_name}
+          </label>
+        </div>
+      ))}
 
       <Form onSubmit={handleSubmit}>
         <Button variant="primary" type="submit">

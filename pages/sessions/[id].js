@@ -2,15 +2,24 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSingleSession } from '../../utils/data/sessionData';
+import { getSessionEngineersBySessionId } from '../../utils/data/sessionEngineerData';
+import EngineerCard from '../../components/Cards/EngineerCard';
 
 export default function ViewSession() {
   const [sessionDetails, setSessionDetails] = useState([]);
+  const [sessionEngineers, setSessionEngineers] = useState([]);
   const router = useRouter();
 
   const { id } = router.query;
 
+  const getAllSessionEngineers = async () => {
+    const engineers = await getSessionEngineersBySessionId(id);
+    setSessionEngineers(engineers);
+  };
+
   useEffect(() => {
     getSingleSession(id).then(setSessionDetails);
+    getAllSessionEngineers();
   }, [id]);
 
   return (
@@ -29,6 +38,11 @@ export default function ViewSession() {
           </p>
           <p className="PD-desc">End Time: {sessionDetails.end_time}
           </p>
+          <div className="d-flex">
+            {sessionEngineers ? sessionEngineers.map((engineer) => (
+              <EngineerCard key={`engineer--${engineer.id}`} engineerObj={engineer} onUpdate={getAllSessionEngineers} />
+            )) : 'No engineers on this session yet'}
+          </div>
           <hr />
         </div>
       </div>
