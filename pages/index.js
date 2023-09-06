@@ -13,7 +13,7 @@ function Home() {
   };
   useEffect(() => {
     getAllTheSessions();
-  });
+  }, [setSessions]);
   return (
     <div>
       <h1>Hello {user.fbUser.displayName}! </h1>

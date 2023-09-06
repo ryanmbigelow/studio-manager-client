@@ -5,7 +5,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useAuth } from '../../utils/context/authContext';
 import { createSession, updateSession } from '../../utils/data/sessionData';
 import { getAllEngineers } from '../../utils/data/engineerData';
-import createSessionEngineer from '../../utils/data/sessionEngineerData';
+import { createSessionEngineer } from '../../utils/data/sessionEngineerData';
 
 const initialState = {
   artist: '',
@@ -45,7 +45,9 @@ export default function SessionForm({ sessionObj }) {
   };
 
   const handleCheckboxChange = (engineerId) => {
-    if (selectedEngineers.includes(engineerId)) {
+    if (!selectedEngineers) {
+      setSelectedEngineers(engineerId);
+    } else if (selectedEngineers.includes(engineerId)) {
       // if the engineer is already included in the array,
       // we create a new array using .filter that includes every engineer
       // except for the engineer who was deselected
@@ -71,23 +73,25 @@ export default function SessionForm({ sessionObj }) {
       };
       updateSession(sessionUpdate).then(() => router.push('/'));
     } else {
-      const session = {
-        artist: currentSession.artist,
-        date: currentSession.date,
-        startTime: currentSession.startTime,
-        endTime: currentSession.endTime,
-        engineerId: Number(user.id),
-      };
-      createSession(session);
-      selectedEngineers.forEach((engineer) => {
-        const payload = {
-          engineerId: engineer.id,
-          sessionId: session.id,
+      const createSessionWithSessionEngineers = async () => {
+        const session = {
+          artist: currentSession.artist,
+          date: currentSession.date,
+          startTime: currentSession.startTime,
+          endTime: currentSession.endTime,
+          engineerId: Number(user.id),
         };
-        createSessionEngineer(payload);
-        console.warn(selectedEngineers);
-      });
-      router.push('/');
+        const newSession = await createSession(session);
+        selectedEngineers.forEach((engineer) => {
+          const payload = {
+            engineerId: engineer,
+            sessionId: newSession.id,
+          };
+          createSessionEngineer(payload);
+        });
+        router.push('/');
+      };
+      createSessionWithSessionEngineers();
     }
   };
 
