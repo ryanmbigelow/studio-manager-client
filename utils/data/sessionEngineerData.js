@@ -9,6 +9,13 @@ const getSessionEngineersBySessionId = (id) => new Promise((resolve, reject) => 
     .catch(reject);
 });
 
+const getSingleSessionEngineerBySessionId = (sessionId, engineerId) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/sessions/${sessionId}/get_session_engineer/${engineerId}`)
+    .then((response) => response.json())
+    .then(resolve)
+    .catch(reject);
+});
+
 const createSessionEngineer = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/session_engineers`, {
     method: 'POST',
@@ -22,4 +29,17 @@ const createSessionEngineer = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-export { getSessionEngineersBySessionId, createSessionEngineer };
+const deleteSessionEngineer = (engineerId, sessionId) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/session_engineers/${engineerId}?session_id=${sessionId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(resolve)
+    .catch(reject);
+});
+
+export {
+  getSessionEngineersBySessionId, createSessionEngineer, deleteSessionEngineer, getSingleSessionEngineerBySessionId,
+};
