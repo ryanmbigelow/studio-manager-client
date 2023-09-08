@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSingleSession } from '../../utils/data/sessionData';
 import { getSessionEngineersBySessionId } from '../../utils/data/sessionEngineerData';
-import EngineerCard from '../../components/Cards/EngineerCard';
+import SessionEngineerCard from '../../components/Cards/SessionEngineerCard';
 
 export default function ViewSession() {
   const [sessionDetails, setSessionDetails] = useState([]);
@@ -40,7 +40,7 @@ export default function ViewSession() {
           </p>
           <div className="d-flex">
             {sessionEngineers ? sessionEngineers.map((engineer) => (
-              <EngineerCard key={`engineer--${engineer.id}`} engineerObj={engineer} onUpdate={getAllSessionEngineers} />
+              <SessionEngineerCard key={`engineer--${engineer.id}`} engineerObj={engineer} sessionId={id} onUpdate={getAllSessionEngineers} />
             )) : 'No engineers on this session yet'}
           </div>
           <hr />
