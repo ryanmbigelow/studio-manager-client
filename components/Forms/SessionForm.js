@@ -5,7 +5,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useAuth } from '../../utils/context/authContext';
 import { createSession, updateSession } from '../../utils/data/sessionData';
 import { getAllEngineers } from '../../utils/data/engineerData';
-import { createSessionEngineer } from '../../utils/data/sessionEngineerData';
+import { createSessionEngineer, getEngineersBySessionId } from '../../utils/data/sessionEngineerData';
 
 const initialState = {
   artist: '',
@@ -15,15 +15,22 @@ const initialState = {
   engineerId: 0,
 };
 
-export default function SessionForm({ sessionObj }) {
+export default function SessionForm({ sessionObj, sessionId }) {
   const [currentSession, setCurrentSession] = useState(initialState);
   const [engineers, setEngineers] = useState([]);
   const [selectedEngineers, setSelectedEngineers] = useState([]);
   const { user } = useAuth();
   const router = useRouter();
 
+  const getEngineersThenSetSelected = async () => {
+    await getEngineersBySessionId(sessionId).then((arr) => {
+      setSelectedEngineers(arr);
+    });
+  };
+
   useEffect(() => {
     getAllEngineers().then(setEngineers);
+    getEngineersThenSetSelected();
     if (sessionObj.id) {
       setCurrentSession({
         id: sessionObj.id,
@@ -34,7 +41,9 @@ export default function SessionForm({ sessionObj }) {
         engineerId: sessionObj.engineer_id?.id,
       });
     }
-  }, [sessionObj]);
+  }, [sessionObj, sessionId, setSelectedEngineers]);
+
+  console.warn(selectedEngineers);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,8 +54,8 @@ export default function SessionForm({ sessionObj }) {
   };
 
   const handleCheckboxChange = (engineerId) => {
-    if (!selectedEngineers) {
-      setSelectedEngineers(engineerId);
+    if (selectedEngineers) {
+      setSelectedEngineers(selectedEngineers);
     } else if (selectedEngineers.includes(engineerId)) {
       // if the engineer is already included in the array,
       // we create a new array using .filter that includes every engineer
@@ -156,8 +165,10 @@ SessionForm.propTypes = {
       last_name: PropTypes.string,
     }),
   }),
+  sessionId: PropTypes.number,
 };
 
 SessionForm.defaultProps = {
   sessionObj: initialState,
+  sessionId: 0,
 };

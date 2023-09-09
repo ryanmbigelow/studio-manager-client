@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSingleSession } from '../../utils/data/sessionData';
-import { getSessionEngineersBySessionId } from '../../utils/data/sessionEngineerData';
+import { getEngineersBySessionId } from '../../utils/data/sessionEngineerData';
 import SessionEngineerCard from '../../components/Cards/SessionEngineerCard';
 
 export default function ViewSession() {
@@ -13,7 +13,7 @@ export default function ViewSession() {
   const { id } = router.query;
 
   const getAllSessionEngineers = async () => {
-    const engineers = await getSessionEngineersBySessionId(id);
+    const engineers = await getEngineersBySessionId(id);
     setSessionEngineers(engineers);
   };
 

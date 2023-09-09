@@ -2,15 +2,8 @@ import { clientCredentials } from '../client';
 
 const endpoint = clientCredentials.databaseURL;
 
-const getSessionEngineersBySessionId = (id) => new Promise((resolve, reject) => {
+const getEngineersBySessionId = (id) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/sessions/${id}/get_engineers`)
-    .then((response) => response.json())
-    .then(resolve)
-    .catch(reject);
-});
-
-const getSingleSessionEngineerBySessionId = (sessionId, engineerId) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/sessions/${sessionId}/get_session_engineer/${engineerId}`)
     .then((response) => response.json())
     .then(resolve)
     .catch(reject);
@@ -41,5 +34,5 @@ const deleteSessionEngineer = (engineerId, sessionId) => new Promise((resolve, r
 });
 
 export {
-  getSessionEngineersBySessionId, createSessionEngineer, deleteSessionEngineer, getSingleSessionEngineerBySessionId,
+  createSessionEngineer, deleteSessionEngineer, getEngineersBySessionId,
 };

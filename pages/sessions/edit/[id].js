@@ -15,7 +15,7 @@ const EditSession = () => {
   return (
     <div>
       <h2>Edit Session</h2>
-      <SessionForm sessionObj={editSession} />
+      <SessionForm sessionObj={editSession} sessionId={Number(id)} />
     </div>
   );
 };
