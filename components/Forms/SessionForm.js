@@ -22,15 +22,19 @@ export default function SessionForm({ sessionObj, sessionId }) {
   const { user } = useAuth();
   const router = useRouter();
 
-  const getEngineersThenSetSelected = async () => {
-    await getEngineersBySessionId(sessionId).then((arr) => {
-      setSelectedEngineers(arr);
+  const getEngineersThenSetSelected = () => {
+    getEngineersBySessionId(sessionId).then(async (arr) => {
+      await setSelectedEngineers(arr);
     });
   };
 
-  useEffect(() => {
+  const getEngineersThenSet = () => {
     getAllEngineers().then(setEngineers);
+  };
+
+  useEffect(() => {
     getEngineersThenSetSelected();
+    getEngineersThenSet();
     if (sessionObj.id) {
       setCurrentSession({
         id: sessionObj.id,
@@ -41,7 +45,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
         engineerId: sessionObj.engineer_id?.id,
       });
     }
-  }, [sessionObj, sessionId, setSelectedEngineers]);
+  }, [sessionObj, sessionId]);
 
   console.warn(selectedEngineers);
 
@@ -54,33 +58,45 @@ export default function SessionForm({ sessionObj, sessionId }) {
   };
 
   const handleCheckboxChange = (engineerId) => {
-    if (selectedEngineers) {
-      setSelectedEngineers(selectedEngineers);
-    } else if (selectedEngineers.includes(engineerId)) {
+    if (selectedEngineers.some((eng) => eng.id === engineerId)) {
       // if the engineer is already included in the array,
       // we create a new array using .filter that includes every engineer
       // except for the engineer who was deselected
-      setSelectedEngineers(selectedEngineers.filter((id) => id !== engineerId));
+      setSelectedEngineers(selectedEngineers.filter((eng) => eng.id !== engineerId));
     } else {
       // if the engineer is not already included in the array,
       // we use the spread operator to include the selected engineers
       // and we add the newly selected engineer to the array
-      setSelectedEngineers([...selectedEngineers, engineerId]);
+      const engineer = engineers.filter((eng) => eng.id === engineerId);
+      setSelectedEngineers([...selectedEngineers, engineer[0]]);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (sessionObj.id) {
-      const sessionUpdate = {
-        id: currentSession.id,
-        artist: currentSession.artist,
-        date: currentSession.date,
-        startTime: currentSession.startTime,
-        endTime: currentSession.endTime,
-        engineerId: Number(currentSession.engineerId),
+      const updateSessionWithSessionEngineers = async () => {
+        const sessionUpdate = {
+          id: currentSession.id,
+          artist: currentSession.artist,
+          date: currentSession.date,
+          startTime: currentSession.startTime,
+          endTime: currentSession.endTime,
+          engineerId: Number(currentSession.engineerId),
+        };
+        await updateSession(sessionUpdate);
+        const engineerIds = [];
+        selectedEngineers.forEach((engineer) => {
+          engineerIds.push(engineer.id);
+        });
+        const payload = {
+          engineerIds,
+          sessionId: currentSession.id,
+        };
+        createSessionEngineer(payload);
+        router.push('/');
       };
-      updateSession(sessionUpdate).then(() => router.push('/'));
+      updateSessionWithSessionEngineers();
     } else {
       const createSessionWithSessionEngineers = async () => {
         const session = {
@@ -93,7 +109,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
         const newSession = await createSession(session);
         selectedEngineers.forEach((engineer) => {
           const payload = {
-            engineerId: engineer,
+            engineerId: engineer.id,
             sessionId: newSession.id,
           };
           createSessionEngineer(payload);
@@ -134,7 +150,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
             type="checkbox"
             value={engineer.id}
             id={`engineer-${engineer.id}`}
-            checked={selectedEngineers.includes(engineer.id)}
+            checked={selectedEngineers.some((eng) => eng.id === engineer.id)}
             onChange={() => handleCheckboxChange(engineer.id)}
           />
           <label className="form-check-label" htmlFor={`engineer-${engineer.id}`}>
