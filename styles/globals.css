@@ -18,7 +18,34 @@ a {
 }
 
 body {
-  background-color: #88effd;
+  background-image: #EDEDED;
+}
+
+p {
+  padding: 2rem 0;
+}
+
+#homepage-greeting {
+  display: flex;
+  margin: 4rem;
+}
+
+#homepage-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#homepage-session-table {
+  margin: 2rem 0
+}
+
+#mixing-board {
+  border-radius: 5%;
+}
+
+.padding {
+  padding: 4rem;
 }
 
 .sessionCards {
