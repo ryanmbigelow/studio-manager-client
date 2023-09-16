@@ -22,7 +22,7 @@ function Home() {
         <div id="homepage-text">
           <h1>Welcome to Studio Manager, {user.fbUser.displayName}!
           </h1>
-          <p>Studio Manager is an organizational tool for studio owners to manage both recording sessions and engineers. You can view your sessions below, create a new session by selecting &quot;Book a Session&quot; and manage your engineers in the &quot;Engineers&quot; tab.</p>
+          <p id="into-text">Studio Manager is an organizational tool for studio owners to manage both recording sessions and engineers. You can view your sessions below, create a new session by selecting &quot;Book a Session&quot; and manage your engineers in the &quot;Engineers&quot; tab.</p>
           <Link passHref href="/sessions/new">
             <Button>Book a Session</Button>
           </Link>
