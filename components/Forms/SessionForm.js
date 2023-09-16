@@ -107,13 +107,15 @@ export default function SessionForm({ sessionObj, sessionId }) {
           engineerId: Number(user.id),
         };
         const newSession = await createSession(session);
+        const engineerIds = [];
         selectedEngineers.forEach((engineer) => {
-          const payload = {
-            engineerId: engineer.id,
-            sessionId: newSession.id,
-          };
-          createSessionEngineer(payload);
+          engineerIds.push(engineer.id);
         });
+        const payload = {
+          engineerIds,
+          sessionId: newSession.id,
+        };
+        createSessionEngineer(payload);
         router.push('/');
       };
       createSessionWithSessionEngineers();

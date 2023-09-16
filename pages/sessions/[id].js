@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSingleSession } from '../../utils/data/sessionData';
 import { getEngineersBySessionId } from '../../utils/data/sessionEngineerData';
-import SessionEngineerCard from '../../components/Cards/SessionEngineerCard';
+import SessionEngineerTable from '../../components/Tables/SessionEngineerTable';
 
 export default function ViewSession() {
   const [sessionDetails, setSessionDetails] = useState([]);
@@ -20,7 +20,7 @@ export default function ViewSession() {
   useEffect(() => {
     getSingleSession(id).then(setSessionDetails);
     getAllSessionEngineers();
-  }, [id]);
+  }, [id, setSessionEngineers]);
 
   return (
     <div className="post-details-page">
@@ -38,11 +38,23 @@ export default function ViewSession() {
           </p>
           <p className="PD-desc">End Time: {sessionDetails.end_time}
           </p>
-          <div className="d-flex">
-            {sessionEngineers ? sessionEngineers.map((engineer) => (
-              <SessionEngineerCard key={`engineer--${engineer.id}`} engineerObj={engineer} sessionId={id} onUpdate={getAllSessionEngineers} />
-            )) : 'No engineers on this session yet'}
-          </div>
+          <h4>Session Engineers:</h4>
+          <table id="homepage-session-table" className="table table-striped table-bordered table-hover">
+            <thead className="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Is Admin</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sessionEngineers ? sessionEngineers.map((engineer) => (
+                <SessionEngineerTable key={`engineer--${engineer.id}`} engineerObj={engineer} sessionId={id} onUpdate={getAllSessionEngineers} />
+              )) : 'No engineers on this session'}
+            </tbody>
+          </table>
           <hr />
         </div>
       </div>

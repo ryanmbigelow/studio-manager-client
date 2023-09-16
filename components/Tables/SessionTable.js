@@ -12,7 +12,7 @@ const SessionTable = ({ sessionObj, onUpdate }) => {
   };
   return (
     <tr>
-      <th scope="row">1</th>
+      <th scope="row">{sessionObj.id}</th>
       <td>{sessionObj.artist}</td>
       <td>{sessionObj.start_time}</td>
       <td>{sessionObj.end_time}</td>

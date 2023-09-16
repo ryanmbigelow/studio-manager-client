@@ -21,7 +21,15 @@ body {
   background-image: #EDEDED;
 }
 
-p {
+.into-text {
+  padding: 2rem 0;
+}
+
+h4 {
+  padding: 1rem;
+}
+
+.into-text {
   padding: 2rem 0;
 }
 
