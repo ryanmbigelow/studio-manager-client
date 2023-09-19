@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../utils/context/authContext';
 import { createSession, updateSession } from '../../utils/data/sessionData';
 import { getAllEngineers } from '../../utils/data/engineerData';
@@ -19,6 +21,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
   const [currentSession, setCurrentSession] = useState(initialState);
   const [engineers, setEngineers] = useState([]);
   const [selectedEngineers, setSelectedEngineers] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
   const { user } = useAuth();
   const router = useRouter();
 
@@ -47,8 +50,6 @@ export default function SessionForm({ sessionObj, sessionId }) {
     }
   }, [sessionObj, sessionId]);
 
-  console.warn(selectedEngineers);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCurrentSession((prevState) => ({
@@ -72,8 +73,13 @@ export default function SessionForm({ sessionObj, sessionId }) {
     }
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.warn(selectedDate);
     if (sessionObj.id) {
       const updateSessionWithSessionEngineers = async () => {
         const sessionUpdate = {
@@ -130,8 +136,13 @@ export default function SessionForm({ sessionObj, sessionId }) {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Date</Form.Label>
-        <Form.Control name="date" required value={currentSession.date} onChange={handleChange} type="text" />
+        <Form.Label className="form-group">Date</Form.Label>
+        <br />
+        <DatePicker
+          dateFormat="yyyy/MM/dd"
+          selected={selectedDate}
+          onChange={handleDateChange}
+        />
       </Form.Group>
 
       <Form.Group className="mb-3">
