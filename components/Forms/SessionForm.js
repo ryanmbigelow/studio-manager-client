@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import DatePicker from 'react-datepicker';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'react-datepicker/dist/react-datepicker.css';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { format } from 'date-fns';
 import { useAuth } from '../../utils/context/authContext';
 import { createSession, updateSession } from '../../utils/data/sessionData';
 import { getAllEngineers } from '../../utils/data/engineerData';
@@ -19,6 +25,9 @@ export default function SessionForm({ sessionObj, sessionId }) {
   const [currentSession, setCurrentSession] = useState(initialState);
   const [engineers, setEngineers] = useState([]);
   const [selectedEngineers, setSelectedEngineers] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(
+    sessionObj.date ? new Date(sessionObj.date) : null,
+  );
   const { user } = useAuth();
   const router = useRouter();
 
@@ -35,6 +44,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
   useEffect(() => {
     getEngineersThenSetSelected();
     getEngineersThenSet();
+    console.warn(sessionObj);
     if (sessionObj.id) {
       setCurrentSession({
         id: sessionObj.id,
@@ -46,8 +56,6 @@ export default function SessionForm({ sessionObj, sessionId }) {
       });
     }
   }, [sessionObj, sessionId]);
-
-  console.warn(selectedEngineers);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,14 +80,19 @@ export default function SessionForm({ sessionObj, sessionId }) {
     }
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.warn(selectedDate);
     if (sessionObj.id) {
       const updateSessionWithSessionEngineers = async () => {
         const sessionUpdate = {
           id: currentSession.id,
           artist: currentSession.artist,
-          date: currentSession.date,
+          date: format(selectedDate, 'yyyy-MM-dd'),
           startTime: currentSession.startTime,
           endTime: currentSession.endTime,
           engineerId: Number(currentSession.engineerId),
@@ -101,7 +114,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
       const createSessionWithSessionEngineers = async () => {
         const session = {
           artist: currentSession.artist,
-          date: currentSession.date,
+          date: format(selectedDate, 'yyyy-MM-dd'),
           startTime: currentSession.startTime,
           endTime: currentSession.endTime,
           engineerId: Number(user.id),
@@ -130,8 +143,13 @@ export default function SessionForm({ sessionObj, sessionId }) {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Date</Form.Label>
-        <Form.Control name="date" required value={currentSession.date} onChange={handleChange} type="text" />
+        <Form.Label className="form-group">Date</Form.Label>
+        <br />
+        <DatePicker
+          selected={selectedDate}
+          onChange={handleDateChange}
+          // value={inputValue}
+        />
       </Form.Group>
 
       <Form.Group className="mb-3">

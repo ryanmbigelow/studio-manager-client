@@ -1,4 +1,4 @@
-# React/Next.js Django Auth Template
+# Studio Manager
 
 ## Topics
 - [Get Started](#getting-started)
