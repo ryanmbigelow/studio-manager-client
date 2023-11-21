@@ -26,7 +26,7 @@ body {
 }
 
 h4 {
-  padding: 1rem;
+  padding: 1rem 0;
 }
 
 .into-text {
@@ -67,4 +67,22 @@ h4 {
 .sessionCards > * {
   display: flex;
   margin: 1%;
+}
+
+.signoutbutton {
+  margin: 2rem;
+  display: flex;
+  justify-content: end;
+}
+
+.sessiondetailsactionbuttons {
+  display: flex;
+}
+
+.editsessionbutton {
+  margin-right: 1rem
+}
+
+.deletesessionbutton {
+  margin-left: 1rem
 }

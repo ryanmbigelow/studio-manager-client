@@ -6,6 +6,7 @@ import { useAuth } from '../utils/context/authContext';
 import { getAllSessions } from '../utils/data/sessionData';
 import SessionTable from '../components/Tables/SessionTable';
 import mixingBoard from '../public/mixingBoard.jpeg';
+import { signOut } from '../utils/auth';
 
 function Home() {
   const { user } = useAuth();
@@ -20,11 +21,11 @@ function Home() {
     <div>
       <div id="homepage-greeting">
         <div id="homepage-text">
-          <h1>Welcome to Studio Manager, {user.fbUser.displayName}!
+          <h1>Welcome to Studio Manager, {user.first_name}!
           </h1>
           <p id="into-text">Studio Manager is an organizational tool for studio owners to manage both recording sessions and engineers. You can view your sessions below, create a new session by selecting &quot;Book a Session&quot; and manage your engineers in the &quot;Engineers&quot; tab.</p>
           <Link passHref href="/sessions/new">
-            <Button>Book a Session</Button>
+            <Button variant="light" className="btn btn-outline-dark">Book a Session</Button>
           </Link>
         </div>
         <div className="padding" />
@@ -51,6 +52,11 @@ function Home() {
           )) : 'No sessions booked'}
         </tbody>
       </table>
+      <div className="signoutbutton">
+        <Button variant="danger" onClick={signOut}>
+          Sign Out
+        </Button>
+      </div>
     </div>
   );
 }

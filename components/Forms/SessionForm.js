@@ -25,6 +25,8 @@ export default function SessionForm({ sessionObj, sessionId }) {
   const [currentSession, setCurrentSession] = useState(initialState);
   const [engineers, setEngineers] = useState([]);
   const [selectedEngineers, setSelectedEngineers] = useState([]);
+  // if the session is being updated and already has a date,
+  // we set the date to the proper format. otherwise is null.
   const [selectedDate, setSelectedDate] = useState(
     sessionObj.date ? new Date(sessionObj.date) : null,
   );
@@ -80,6 +82,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
     }
   };
 
+  // when a user selects a new date, it is passed through and set here
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -148,7 +151,6 @@ export default function SessionForm({ sessionObj, sessionId }) {
         <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}
-          // value={inputValue}
         />
       </Form.Group>
 

@@ -2,9 +2,11 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import { useAuth } from '../../utils/context/authContext';
 import { deleteSession } from '../../utils/data/sessionData';
 
 const SessionTable = ({ sessionObj, onUpdate }) => {
+  const { user } = useAuth();
   const deleteThisSession = () => {
     if (window.confirm('Are you sure you want to cacel this session?')) {
       deleteSession(sessionObj.id).then(() => onUpdate());
@@ -20,16 +22,24 @@ const SessionTable = ({ sessionObj, onUpdate }) => {
       <td>{sessionObj.engineer_id.first_name} {sessionObj.engineer_id.last_name}</td>
       <td>
         <Link href={`/sessions/${sessionObj.id}`} passHref>
-          <Button variant="light" className="btn btn-outline-dark">View Session Details</Button>
+          <Button variant="light" className="btn btn-outline-success">View Session Details</Button>
         </Link>
       </td>
       <td>
-        <Link href={`/sessions/edit/${sessionObj.id}`} passHref>
-          <Button variant="light" className="btn btn-outline-dark">Edit Session</Button>
-        </Link>
+        {user.is_admin === true ? (
+          <>
+            <Link href={`/sessions/edit/${sessionObj.id}`} passHref>
+              <Button variant="light" className="btn btn-outline-primary">Edit Session</Button>
+            </Link>
+          </>
+        ) : 'Cannot edit'}
       </td>
       <td>
-        <Button variant="light" className="btn btn-outline-danger" onClick={deleteThisSession}>Cancel Session</Button>
+        {user.is_admin === true ? (
+          <>
+            <Button variant="light" className="btn btn-outline-danger" onClick={deleteThisSession}>Cancel Session</Button>
+          </>
+        ) : 'Cannot delete'}
       </td>
     </tr>
   );

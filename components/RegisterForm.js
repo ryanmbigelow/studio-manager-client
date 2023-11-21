@@ -9,7 +9,7 @@ function RegisterForm({ user, updateUser }) {
     firstName: '',
     lastName: '',
     isAdmin: false,
-    profilePicture: '',
+    profilePicture: 'na',
     uid: user.uid,
   });
 
@@ -29,9 +29,6 @@ function RegisterForm({ user, updateUser }) {
         {/* LAST NAME  */}
         <Form.Text className="text-muted">Last Name</Form.Text>
         <Form.Control as="textarea" name="lastName" required placeholder="Enter Last Name" onChange={({ target }) => setFormData((prev) => ({ ...prev, [target.name]: target.value }))} />
-        {/* PROFILE PICTURE  */}
-        <Form.Text className="text-muted">Profile Picture URL</Form.Text>
-        <Form.Control as="textarea" name="profilePicture" required placeholder="Enter an Image URL for your Profile Picture" onChange={({ target }) => setFormData((prev) => ({ ...prev, [target.name]: target.value }))} />
       </Form.Group>
       <Button variant="primary" type="submit">
         Register Account
