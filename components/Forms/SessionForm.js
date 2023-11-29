@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import 'react-datepicker/dist/react-datepicker.css';
+// import 'react-datepicker/dist/react-datepicker.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import { useAuth } from '../../utils/context/authContext';
 import { createSession, updateSession } from '../../utils/data/sessionData';
 import { getAllEngineers } from '../../utils/data/engineerData';
@@ -28,7 +28,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
   // if the session is being updated and already has a date,
   // we set the date to the proper format. otherwise is null.
   const [selectedDate, setSelectedDate] = useState(
-    sessionObj.date ? new Date(sessionObj.date) : null,
+    sessionObj.date ? sessionObj.date : null,
   );
   const { user } = useAuth();
   const router = useRouter();
@@ -95,7 +95,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
         const sessionUpdate = {
           id: currentSession.id,
           artist: currentSession.artist,
-          date: format(selectedDate, 'yyyy-MM-dd'),
+          date: selectedDate,
           startTime: currentSession.startTime,
           endTime: currentSession.endTime,
           engineerId: Number(currentSession.engineerId),
@@ -117,7 +117,7 @@ export default function SessionForm({ sessionObj, sessionId }) {
       const createSessionWithSessionEngineers = async () => {
         const session = {
           artist: currentSession.artist,
-          date: format(selectedDate, 'yyyy-MM-dd'),
+          date: selectedDate,
           startTime: currentSession.startTime,
           endTime: currentSession.endTime,
           engineerId: Number(user.id),
@@ -146,13 +146,23 @@ export default function SessionForm({ sessionObj, sessionId }) {
       </Form.Group>
 
       <Form.Group className="mb-3">
+        <Form.Label>Date</Form.Label>
+        <Form.Control
+          type="date"
+          name="date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          required
+        />
+      </Form.Group>
+      {/* <Form.Group className="mb-3">
         <Form.Label className="form-group">Date</Form.Label>
         <br />
         <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}
         />
-      </Form.Group>
+      </Form.Group> */}
 
       <Form.Group className="mb-3">
         <Form.Label>Start Time</Form.Label>
